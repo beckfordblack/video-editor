@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIDEO EDITOR</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app">
+
+    <header class="topbar">
+        <div class="brand">VIDEO EDITOR</div>
+        <div class="top-status" id="previewStatus">READY</div>
+    </header>
+
+    <main class="workspace">
+
+        <section class="preview-panel panel">
+            <div class="panel-heading">
+                <h2>PREVIEW</h2>
+                <span class="muted" id="timeDisplay">00:00:00.000</span>
+            </div>
+
+            <div class="preview-stage">
+                <video id="previewVideo" playsinline></video>
+                <div class="empty-preview" id="emptyPreview">
+                    <span>NO VIDEO</span>
+                    <small>クリップをインポートしてください</small>
+                </div>
+            </div>
+
+            <div class="transport">
+                <button class="button" id="backButton" title="1フレーム戻る">−1F</button>
+                <button class="button play-button" id="playButton">▶</button>
+                <button class="button" id="forwardButton" title="1フレーム進む">+1F</button>
+            </div>
+        </section>
+
+        <section class="timeline-panel panel">
+            <div class="panel-heading">
+                <h2>TIMELINE</h2>
+                <div class="timeline-tools">
+                    <button class="button small" id="splitButton">分割</button>
+                    <button class="button small" id="deleteButton">削除</button>
+                </div>
+            </div>
+
+            <div class="timeline-scroll" id="timelineScroll">
+                <div class="timeline-content" id="timelineContent">
+                    <div class="ruler" id="ruler"></div>
+
+                    <div class="track-row">
+                        <div class="track-label">VIDEO 1</div>
+                        <div class="track-lane" id="trackLane">
+                            <div class="clips" id="clips"></div>
+                            <div class="playhead" id="playhead"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-footer">
+                <span id="timelineDuration">合計 00:00</span>
+                <span>クリックで再生位置を変更</span>
+            </div>
+        </section>
+
+        <aside class="properties-panel panel">
+            <div class="panel-heading">
+                <h2>CLIP SETTINGS</h2>
+            </div>
+
+            <div class="import-export">
+                <label class="button primary import-button" for="fileInput">
+                    ＋ 動画をインポート
+                </label>
+                <input type="file" id="fileInput" accept="video/*" multiple>
+
+                <button class="button accent" id="exportButton">
+                    動画を書き出す
+                </button>
+            </div>
+
+            <div id="noSelection">
+                クリップを選択すると設定を編集できます。
+            </div>
+
+            <div id="clipProperties" hidden>
+                <div class="clip-name" id="clipName"></div>
+
+                <label>
+                    開始位置（秒）
+                    <input type="number" id="trimStart" min="0" step="0.001">
+                </label>
+
+                <label>
+                    終了位置（秒）
+                    <input type="number" id="trimEnd" min="0" step="0.001">
+                </label>
+
+                <button class="button primary" id="applyTrimButton">
+                    トリミングを適用
+                </button>
+
+                <div class="property-note">
+                    ※ 元動画の時間を基準に指定します。
+                </div>
+            </div>
+
+            <div class="settings-footer" id="message">
+                動画編集ツール
+            </div>
+        </aside>
+
+    </main>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
