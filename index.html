@@ -6,12 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         * {padding: 0; margin: 0;}
-        body {background: #24232100; overflow: hidden;}
-        canvas {display: block; margin: 20px auto;}
+        html, body {width: 100%; height: 100%; overflow: hidden;}
+        body {
+            background: #242321;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        canvas {border: solid 1px  black;}
     </style>
 </head>
 <body>
-    <canvas id="canvas" width="1080px" height="1920px" style="border: solid 1px  black;"></canvas>
+    <canvas id="canvas" width="1080px" height="1920px"></canvas>
     <script src="Playground.js"></script>
     <script src="Simulation.js"></script>
     <script>
@@ -66,9 +72,9 @@
         window.addEventListener("resize", resize)
 
         function resize() {
-            const width = window.innerWidth / canvas.clientWidth;
-            const height = window.innerHeight / canvas.clientHeight;
-            canvas.style.scale = Math.min(width, height)
+            const width = window.innerWidth / 1080;
+            const height = window.innerHeight / 1920;
+            canvas.style.scale = Math.min(width, height);
         }
     </script>
 </body>
