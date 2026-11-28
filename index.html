@@ -1,121 +1,75 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+    <title>2D Fluid Simulation</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIDEO EDITOR</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        * {padding: 0; margin: 0;}
+        body {background: #24232100; overflow: hidden;}
+        canvas {display: block; margin: 20px auto;}
+    </style>
 </head>
 <body>
+    <canvas id="canvas" width="1080px" height="1920px" style="border: solid 1px  black;"></canvas>
+    <script src="Playground.js"></script>
+    <script src="Simulation.js"></script>
+    <script>
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
 
-<div class="app">
+        let lastTime = performance.now();
+        let currentTime = 0;
+        let deltaTime = 0;
 
-    <header class="topbar">
-        <div class="brand">VIDEO EDITOR</div>
-        <div class="top-status" id="previewStatus">READY</div>
-    </header>
+        let playground = new Playground();
 
-    <main class="workspace">
+        mainLoop();
 
-        <section class="preview-panel panel">
-            <div class="panel-heading">
-                <h2>PREVIEW</h2>
-                <span class="muted" id="timeDisplay">00:00:00.000</span>
-            </div>
+        function updatePlayground(dt) {
+            playground.update(dt);
+            playground.draw();
+        }
 
-            <div class="preview-stage">
-                <video id="previewVideo" playsinline></video>
-                <div class="empty-preview" id="emptyPreview">
-                    <span>NO VIDEO</span>
-                    <small>クリップをインポートしてください</small>
-                </div>
-            </div>
-        </section>
+        function mainLoop() {
+            window.requestAnimationFrame(mainLoop);
+            
+            currentTime = performance.now();
+            deltaTime = (currentTime - lastTime) / 1000;
 
-        <section class="timeline-panel panel">
-            <div class="panel-heading">
-                <h2>TIMELINE</h2>
-                <div class="transport">
-                    <button class="button" id="backButton" title="1フレーム戻る">−1F</button>
-                    <button class="button play-button" id="playButton">▶</button>
-                    <button class="button" id="forwardButton" title="1フレーム進む">+1F</button>
-                </div>
-                <div class="timeline-tools">
-                    <button class="button small" id="splitButton">分割</button>
-                    <button class="button small" id="deleteButton">削除</button>
-                </div>
-            </div>
+            updatePlayground(deltaTime);
+            lastTime = currentTime;
+        }
 
-            <div class="timeline-scroll" id="timelineScroll">
-                <div class="timeline-content" id="timelineContent">
-                    <div class="ruler" id="ruler" ></div>
+        function getMousePos(canvas, evt) {
+            const rect = canvas.getBoundingClientRect();
+            return {
+                x: evt.clientX - rect.left,
+                y: evt.clientY - rect.top
+            };
+        }
 
-                    <div class="track-row">
-                        <div class="track-label">VIDEO 1</div>
-                        <div class="track-lane" id="trackLane">
-                            <div class="clips" id="clips"></div>
-                            <div class="playhead" id="playhead"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        canvas.addEventListener("pointermove", function(evt) {
+            let mouse = getMousePos(canvas, evt);
+            playground.onMouseMove(mouse.x, mouse.y);
+        }, false)
 
-            <div class="timeline-footer">
-                <span id="timelineDuration">合計 00:00</span>
-                <span>クリックで再生位置を変更</span>
-            </div>
-        </section>
+        canvas.addEventListener("pointerdown", function(evt) {
+            playground.onMouseDown(evt.button);
+        }, false)
 
-        <aside class="properties-panel panel">
-            <div class="panel-heading">
-                <h2>CLIP SETTINGS</h2>
-            </div>
+        canvas.addEventListener("pointerup", function(evt) {
+            playground.onMouseUp(evt.button);
+        }, false)
 
-            <div class="import-export">
-                <label class="button primary import-button" for="fileInput">
-                    ＋ 動画をインポート
-                </label>
-                <input type="file" id="fileInput" accept="video/*" multiple>
+        resize();
+        window.addEventListener("resize", resize)
 
-                <button class="button accent" id="exportButton">
-                    動画を書き出す
-                </button>
-            </div>
-
-            <div id="noSelection">
-                クリップを選択すると設定を編集できます。
-            </div>
-
-            <div id="clipProperties" hidden>
-                <div class="clip-name" id="clipName"></div>
-
-                <label>
-                    開始位置（秒）
-                    <input type="number" id="trimStart" min="0" step="0.001">
-                </label>
-
-                <label>
-                    終了位置（秒）
-                    <input type="number" id="trimEnd" min="0" step="0.001">
-                </label>
-
-                <button class="button primary" id="applyTrimButton">
-                    トリミングを適用
-                </button>
-
-                <div class="property-note">
-                    ※ 元動画の時間を基準に指定します。
-                </div>
-            </div>
-
-            <div class="settings-footer" id="message">
-                動画編集ツール
-            </div>
-        </aside>
-
-    </main>
-</div>
-
-<script src="script.js"></script>
+        function resize() {
+            const width = window.innerWidth / canvas.clientWidth;
+            const height = window.innerHeight / canvas.clientHeight;
+            canvas.style.scale = Math.min(width, height)
+        }
+    </script>
 </body>
 </html>
