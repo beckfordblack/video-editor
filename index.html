@@ -17,9 +17,12 @@
     </style>
 </head>
 <body>
-    <canvas id="canvas" width="1080px" height="1920px"></canvas>
+    <canvas id="canvas" width="720px" height="1280px"></canvas>
     <script src="Playground.js"></script>
     <script src="Simulation.js"></script>
+    <script src="Vector2.js"></script>
+    <script src="DrawUtils.js"></script>
+    <script src="Particle.js"></script>
     <script>
         const canvas = document.getElementById("canvas");
         const ctx = canvas.getContext("2d");
@@ -33,6 +36,7 @@
         mainLoop();
 
         function updatePlayground(dt) {
+            clear();
             playground.update(dt);
             playground.draw();
         }
@@ -47,6 +51,11 @@
             lastTime = currentTime;
         }
 
+        function clear() {
+            ctx.fillStyle = "#242321";
+            ctx.fillRect(0, 0, canvas.width, canvas.height)
+        }
+
         function getMousePos(canvas, evt) {
             const rect = canvas.getBoundingClientRect();
             return {
@@ -57,7 +66,7 @@
 
         canvas.addEventListener("pointermove", function(evt) {
             let mouse = getMousePos(canvas, evt);
-            playground.onMouseMove(mouse.x, mouse.y);
+            playground.onMouseMove(new Vector2(mouse.x, mouse.y));
         }, false)
 
         canvas.addEventListener("pointerdown", function(evt) {
@@ -72,8 +81,8 @@
         window.addEventListener("resize", resize)
 
         function resize() {
-            const width = window.innerWidth / 1080;
-            const height = window.innerHeight / 1920;
+            const width = window.innerWidth / canvas.width;
+            const height = window.innerHeight / canvas.height;
             canvas.style.scale = Math.min(width, height);
         }
     </script>
